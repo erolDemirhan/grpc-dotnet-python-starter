@@ -6,6 +6,8 @@ from fastapi import Query
 import grpc
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
 import uvicorn
 import time
 import requests
@@ -15,6 +17,25 @@ import intel_pb2_grpc
 
 NEWSAPI_KEY = os.getenv("NEWSAPI_KEY")
 BUILTWITH_API_KEY = os.getenv("BUILTWITH_API_KEY")
+
+app = FastAPI(
+    title="DNet Python Worker API",
+    version="1.0.0",
+    description="Public endpoints + gRPC",
+)
+
+# --- CORS: hızlı test için tüm originlere izin ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # prod'da kısıtlayabilirsin
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 def fetch_ssl_grade(domain: str | None) -> str:
     """
@@ -277,6 +298,8 @@ async def breach_count(domain: str):
     return {"total": total, "source": "mock"}
 
 if __name__ == "__main__":
+    # gRPC + HTTP birlikte
     server = serve_grpc()
-    uvicorn.run(app, host="0.0.0.0", port=8081, log_level="info")
+    port = int(os.getenv("PORT", "8081"))  # Render 'Web Service' için şart: PORT'u dinle
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
     server.wait_for_termination()

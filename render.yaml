@@ -8,21 +8,19 @@ services:
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
-      # Bağlantı/sırlar için sync:false kullan; panelden girersin:
       - key: CONNECTION_STRING
         sync: false
-      # gRPC kullanıyorsan health check belirtmek istemeyebilirsin;
-      # REST health endpoint'in varsa aç:
-    # healthCheckPath: /health
 
-  - type: worker
-    name: dnet-worker
+  - type: web
+    name: dnet-python
     env: docker
     dockerfilePath: worker-python/Dockerfile
     autoDeploy: true
     plan: starter
     envVars:
-      - key: PYTHONUNBUFFERED
-        value: "1"
-      - key: SOME_API_KEY
+      - key: NEWSAPI_KEY
         sync: false
+      - key: BUILTWITH_API_KEY
+        sync: false
+      - key: BUILTWITH_FORCE_MOCK
+        value: "true"    # anahtarlar yoksa mock devrede kalsın
