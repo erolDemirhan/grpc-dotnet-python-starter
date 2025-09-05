@@ -1,14 +1,28 @@
 services:
   - type: web
-    name: orchestrator-dotnet
+    name: dnet-orchestrator
     env: docker
-    rootDir: orchestrator-dotnet
+    dockerfilePath: orchestrator-dotnet/Dockerfile
+    autoDeploy: true
+    plan: starter
     envVars:
-      - key: USE_HTTP_WORKER
-        value: "true"
-      - key: PY_WORKER_HTTP_URL
-        value: "https://REPLACE_WITH_PYTHON_WORKER_URL"
-  - type: web
-    name: python-worker
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      # Bağlantı/sırlar için sync:false kullan; panelden girersin:
+      - key: CONNECTION_STRING
+        sync: false
+      # gRPC kullanıyorsan health check belirtmek istemeyebilirsin;
+      # REST health endpoint'in varsa aç:
+    # healthCheckPath: /health
+
+  - type: worker
+    name: dnet-worker
     env: docker
-    rootDir: worker-python
+    dockerfilePath: worker-python/Dockerfile
+    autoDeploy: true
+    plan: starter
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: SOME_API_KEY
+        sync: false
