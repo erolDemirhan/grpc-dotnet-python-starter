@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: orchestrator-dotnet
+    env: docker
+    rootDir: orchestrator-dotnet
+    envVars:
+      - key: USE_HTTP_WORKER
+        value: "true"
+      - key: PY_WORKER_HTTP_URL
+        value: "https://REPLACE_WITH_PYTHON_WORKER_URL"
+  - type: web
+    name: python-worker
+    env: docker
+    rootDir: worker-python

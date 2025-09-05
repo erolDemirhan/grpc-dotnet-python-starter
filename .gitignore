@@ -1,0 +1,9 @@
+bin/
+obj/
+.vs/
+*.log
+.env
+__pycache__/
+*.pyc
+node_modules/
+dist/

@@ -1,0 +1,37 @@
+{
+  "info": {
+    "name": "Orchestrator Preview",
+    "_postman_id": "dotnet-python-grpc",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Preview",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"companyName\": \"Atlassian\", \"domain\": \"\"}"
+        },
+        "url": {
+          "raw": "http://localhost:5199/ingest/preview",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5199",
+          "path": [
+            "ingest",
+            "preview"
+          ]
+        }
+      }
+    }
+  ]
+}

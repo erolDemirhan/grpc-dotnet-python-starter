@@ -1,0 +1,29 @@
+services:
+  python-worker:
+    build:
+      context: .
+      dockerfile: worker-python/Dockerfile
+    ports:
+      - "50051:50051"
+      - "8081:8081"
+    environment:
+      - NEWSAPI_KEY=${NEWSAPI_KEY}
+      - BUILTWITH_API_KEY=${BUILTWITH_API_KEY}
+      - BUILTWITH_FORCE_MOCK=${BUILTWITH_FORCE_MOCK}
+
+  orchestrator:
+    build:
+      context: .
+      dockerfile: orchestrator-dotnet/Dockerfile
+    ports:
+      - "5199:8080"
+    environment:
+      - PY_WORKER_GRPC_URL=http://python-worker:50051
+      - PY_WORKER_HTTP_URL=http://python-worker:8081
+      # - USE_HTTP_WORKER=true   # Render/HTTP fallback istiyorsan aç
+      - SUPABASE_URL=https://fvhxecptzzwypjfvlrpa.supabase.co
+      - SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2aHhlY3B0enp3eXBqZnZscnBhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjQyMTk1NSwiZXhwIjoyMDcxOTk3OTU1fQ.HFoiEtrOF2za1fKdI57H9GxDIxs3BsNbsAdVJ-JvzyI
+      - SUPABASE_BUCKET=ingest-raw
+      - USE_HTTP_WORKER=true
+    depends_on:
+      - python-worker
